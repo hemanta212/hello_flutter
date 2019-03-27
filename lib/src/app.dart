@@ -9,15 +9,23 @@ class App extends StatefulWidget{
 
 class AppStateKeeper extends State<App> {
 
-  int Score = 1;
+  int score = 1;
+  final double scaleFactor = 1.5;
 
   final themeColor = const Color(0xFF26ae60);
   final bgColor = const Color(0xFFDAE0E2);
 
+
   Widget build(context) {
     return MaterialApp(
     home: Scaffold(
-        body: Text('$Score'),
+
+        body: Text(
+          'You have Pressed the plus button $score times',
+           textAlign: TextAlign.center,
+           style: TextStyle(fontWeight: FontWeight.bold),
+           textScaleFactor: scaleFactor;
+        ),
 
         floatingActionButton: FloatingActionButton(
           child: Icon(
@@ -27,7 +35,7 @@ class AppStateKeeper extends State<App> {
           backgroundColor: themeColor,
           onPressed: () {
             setState(() {
-              Score = Score + 1;
+              score = score + 1;
             });
           }
         ),
