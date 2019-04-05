@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+import './product_manager.dart';
 
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
@@ -9,17 +10,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Sharmaji App'),
+          title: Text("Hemanta Sharma's App"),
         ), // AppBar
-        body: Card(
-          child: Column(
-            children: <Widget>[
-              Image.asset('assets/profile.jpg'),
-              Text("Sharmaji himself")
-            ],
-          ),
-        ),
-      ),
-    );
+        body: ProductManager('Food Tester'),
+      ), // Scaffold
+    ); // MaterialApp
   }
 }
