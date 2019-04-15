@@ -1,75 +1,55 @@
 import 'package:flutter/material.dart';
-//import './app_screens/home.dart';
-
 
 void main() {
   runApp(
     MaterialApp(
-      title: 'Exploring List view',
-      home: Scaffold(
-
-        appBar: AppBar(
-          title: Text("Long List View")
-        ), // AppBar
-
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            debugPrint("FAB clicked");
-          },
-          child: Icon(Icons.add),
-          tooltip: 'Add One More Item',
-        ),// FloatingActionButton
-
-        body: getListView(),
-      ), // Scaffold
-    ), // MaterialApp
-  ); //runApp
-} // Main
-
-
-void showSnackBar(BuildContext context, String item) {
-
-  var snackBar = SnackBar(
-    content: Text("Oe $item thichis. Lamo herira?"),
-    action: SnackBarAction(
-      label: "Undo",
-      onPressed: () {
-        debugPrint("Lamo $item");
-      }
-    ) //SnackBarAction
-  ); // SnackBar
-
-
-  Scaffold.of(context).showSnackBar(snackBar);
+      title: 'Stateful App Example',
+      home: FavoriteCity(),
+    ) // MaterialApp
+  );// runApp
 }
 
-
-
-
-
-
-List<String> getListElements() {
-
-  var items = List<String>.generate(1000, (counter) => "Item $counter");
-  return items;
+class FavoriteCity extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _FavoriteCityState();
+  }
 }
 
-Widget getListView() {
+class _FavoriteCityState extends State<FavoriteCity>{
 
-  var listItems = getListElements();
+  String nameCity = "";
 
-  var listView = ListView.builder(
-    itemBuilder: (context, index) {
+  @override
+  Widget build(BuildContext context){
 
-      return ListTile(
-        leading: Icon(Icons.arrow_right),
-        title: Text(listItems[index]),
-        onTap: () {
-          showSnackBar(context, listItems[index]);
-        },
-      ); // ListTile
-    }
-  );
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Stateful App Example"),
+      ),// AppBar
 
-  return listView;
-} // getListView
+      body: Container (
+        margin: EdgeInsets.all(20.0),
+        child: Column(
+          children: <Widget>[
+            TextField(
+              onSubmitted: (String userInput){
+                setState(() {
+                  nameCity = userInput;
+                }); // setState
+              }
+            ), //TextField
+            Padding(
+              padding: EdgeInsets.all(30.0),
+              child: Text(
+                "Your best city is $nameCity",
+                style: TextStyle(fontSize: 20.0),
+              ) // Text
+            ) // Padding
+          ]
+        ) //Column
+      ) // Container
+    );// Scaffold
+  }
+
+}
