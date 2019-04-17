@@ -1,148 +1,186 @@
 import 'package:flutter/material.dart';
 
+
 void main() {
 
   runApp(
     MaterialApp(
-      title: 'Simple Interest Calculator App',
+      debugShowCheckedModeBanner: false,
+      title: 'Simple Interest Calculator',
       home: SIForm(),
-    )
-  );
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Colors.indigo,
+        accentColor: Colors.indigoAccent,
+      ) // ThemeData
+    ) // MaterialApp
+  );// runApp
 }
 
 class SIForm extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
-
     return _SIFormState();
   }
 }
 
-class _SIFormState extends State<SIForm> {
+class _SIFormState extends State<SIForm>{
 
-  var _currencies = ['Rupees', 'Dollars', 'Pounds'];
-  final double  _minimumPadding = 5.0;
+  List<String> _currencies = ['Rupees', 'Dollar', 'Pounds', 'Others'];
+  String _currentItemSelected = 'Rupees';
+  final double _minimumPadding = 5.0;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
+
+    TextStyle textStyle = Theme.of(context).textTheme.title;
 
     return Scaffold(
-//      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text('Simple Interest Calculator'),
-      ),
+        title: Text("Simple Interest Calculator"),
+      ),// AppBar
 
       body: Container(
         margin: EdgeInsets.all(_minimumPadding * 2),
         child: ListView(
           children: <Widget>[
-
             getImageAsset(),
 
             Padding(
-              padding: EdgeInsets.only(top: _minimumPadding, bottom: _minimumPadding),
+              padding: EdgeInsets.only(top:_minimumPadding, bottom:_minimumPadding),
               child: TextField(
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Principal',
-                hintText: 'Enter Principal e.g. 12000',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0)
-                )
-              ),
-            )),
-
-            Padding(
-              padding: EdgeInsets.only(top: _minimumPadding, bottom: _minimumPadding),
-              child: TextField(
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                  labelText: 'Rate of Interest',
-                  hintText: 'In percent',
+                keyboardType: TextInputType.number,
+                style : textStyle,
+                decoration: InputDecoration(
+                  labelText: "Principle",
+                  labelStyle: textStyle,
+                  hintText: "Enter Principle eg:10000",
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0)
+                    borderRadius: BorderRadius.circular(5.0)
                   )
-              ),
-            )),
+                ),
+                onChanged: (String userInput) {},
+              ), // Textfield Principle
+            ), //Padding of Principle
 
             Padding(
-              padding: EdgeInsets.only(top: _minimumPadding, bottom: _minimumPadding),
+              padding: EdgeInsets.only(top:_minimumPadding, bottom:_minimumPadding),
+              child: TextField(
+                keyboardType: TextInputType.number,
+                style: textStyle,
+                decoration: InputDecoration(
+                  labelText: "Rate of Interest",
+                  labelStyle: textStyle,
+                  hintText: "Enter in percentage eg:10",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0)
+                  )
+                ),
+                onChanged: (String userInput) {},
+              ), // Textfield Rate of Interest
+            ), // Padding of Rate of Interest
+
+
+            Padding(
+              padding: EdgeInsets.only(top:_minimumPadding, bottom:_minimumPadding),
               child: Row(
+               children: <Widget> [
+
+                Expanded(
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    style: textStyle,
+                    decoration: InputDecoration(
+                      labelText: "Time",
+                      labelStyle: textStyle,
+                      hintText: "Time in years",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0)
+                      )
+                    ),
+                    onChanged: (String userInput) {},
+                  ) // Textfield Rate of Interest
+                ), // Expanded 1
+
+                Container(width: _minimumPadding* 5),
+
+                Expanded(
+                  child: DropdownButton<String>(
+                    items: _currencies.map( (String dropDownStringItem) {
+                      return DropdownMenuItem<String>(
+                        value: dropDownStringItem,
+                        child: Text(dropDownStringItem),
+
+                      ); // DropdownMenuItem
+                    }).toList(),
+
+                    onChanged: (String newValueSelected){
+                      _dropDownItemSelected(newValueSelected);
+                    }, //onChanged
+
+                    value: _currentItemSelected,
+                  ) // DropdownButton
+                ) // Expanded 2
+
+              ] // Row widget list
+            ), // Row
+          ), // Padding Row
+
+          Padding(
+            padding: EdgeInsets.only(bottom: _minimumPadding, top:_minimumPadding),
+            child: Row(
               children: <Widget>[
 
-                Expanded(child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                      labelText: 'Term',
-                      hintText: 'Time in years',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0)
-                      )
-                  ),
-                )),
+                Expanded(
+                  child: RaisedButton(
+                    color: Theme.of(context).accentColor,
+                    textColor: Theme.of(context).primaryColorDark,
+                    child: Text("Calculate", textScaleFactor: 1.5),
+                    onPressed: () {
+                      debugPrint("calculate pressed");
+                    }
+                  ) // RaisedButton Calculate
+                ), //Expanded
 
-                Container(width: _minimumPadding * 5,),
+                Expanded(
+                  child: RaisedButton(
+                    color: Theme.of(context).primaryColorDark,
+                    textColor: Theme.of(context).primaryColorLight,
+                    child: Text("Reset", textScaleFactor: 1.5),
+                    onPressed: () {
+                      debugPrint("Reset pressed");
+                    }
+                  ), // RaisedButton Reset
+                ) //Expanded
+              ]
 
-                Expanded(child: DropdownButton<String>(
-                  items: _currencies.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
+            ) // Row 2 Submit and reset buttons
+          ), // Padding
 
-                  value: 'Rupees',
+          Padding(
+            padding: EdgeInsets.all(_minimumPadding * 2),
+            child: Text('Todo Text', style: textStyle,)
+          )
 
-                  onChanged: (String newValueSelected) {
-                    // Your code to execute, when a menu item is selected from dropdown
-                  },
+          ] // Column widget list
+        ) //Column
+      ) // Container
+    );// Scaffold
+  }
 
-                ))
+  void _dropDownItemSelected(newValueSelected) {
 
-
-              ],
-            )),
-
-            Padding(
-              padding: EdgeInsets.only(bottom: _minimumPadding, top: _minimumPadding),
-              child: Row(children: <Widget>[
-              Expanded(
-                child: RaisedButton(
-                  child: Text('Calculate'),
-                  onPressed: () {
-
-                  },
-                ),
-              ),
-
-              Expanded(
-                child: RaisedButton(
-                  child: Text('Reset'),
-                  onPressed: () {
-
-                  },
-                ),
-              ),
-
-            ],)),
-
-            Padding(
-              padding: EdgeInsets.all(_minimumPadding * 2),
-              child: Text('Todo Text'),
-            )
-
-          ],
-        ),
-      ),
-    );
+    setState( () {
+      this._currentItemSelected = newValueSelected;
+    }); // setState
   }
 
   Widget getImageAsset() {
-
     AssetImage assetImage = AssetImage('images/money.png');
-    Image image = Image(image: assetImage, width: 125.0, height: 125.0,);
-
-    return Container(child: image, margin: EdgeInsets.all(_minimumPadding * 10),);
+    Image image = Image(image: assetImage, width: 125.0, height: 125.0);
+    return Container(child:image, margin: EdgeInsets.all(_minimumPadding * 10));
   }
+
+
 }
+
