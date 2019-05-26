@@ -11,6 +11,7 @@ class SIForm extends StatefulWidget {
 class _SIFormState extends State<SIForm>{
 
   // Variables
+  var _formKey = GlobalKey<FormState>();
   List<String> _currencies = ['Rupees', 'Dollar', 'Pounds', 'Others'];
   String _currentItemSelected = '';
   final double _minimumPadding = 5.0;
@@ -36,106 +37,98 @@ class _SIFormState extends State<SIForm>{
         title: Text("Simple Interest Calculator"),
       ),// AppBar
 
-      body: Container(
-        margin: EdgeInsets.all(_minimumPadding * 2),
-        child: ListView(
-          children: <Widget>[
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: EdgeInsets.all(_minimumPadding * 2),
+          child: ListView(
+            children: <Widget>[
 
-            getImageAsset(),
+              getImageAsset(),
 
-            genTextField(labelText:"Principle", hintText:"Enter Principle eg:10000", textStyle: textStyle, controller:principleController),
+              genTextField(labelText:"Principle", hintText:"Enter Principle eg:10000", textStyle: textStyle, controller:principleController),
 
-            genTextField(labelText:"Rate of Interest", hintText:"Enter in percentage eg:10", textStyle: textStyle, controller:roiController),
+              genTextField(labelText:"Rate of Interest", hintText:"Enter in percentage eg:10", textStyle: textStyle, controller:roiController),
+
+              Padding(
+                padding: EdgeInsets.only(top:_minimumPadding, bottom:_minimumPadding),
+                child: Row(
+                 children: <Widget> [
+
+                  Expanded(
+                    child: genTextField(labelText:"Time", hintText:"Time in years", textStyle: textStyle, controller:termController),
+                  ), // Expanded 1
+
+                  Container(width: _minimumPadding* 5),
+
+                  Expanded(
+                    child: DropdownButton<String>(
+                      items: _currencies.map( (String dropDownStringItem) {
+                        return DropdownMenuItem<String>(
+                          value: dropDownStringItem,
+                          child: Text(dropDownStringItem),
+
+                        ); // DropdownMenuItem
+                      }).toList(),
+
+                      onChanged: (String newValueSelected){
+                        _dropDownItemSelected(newValueSelected);
+                      }, //onChanged
+
+                      value: _currentItemSelected,
+                    ) // DropdownButton
+                  ) // Expanded 2
+
+                ] // Row widget list
+              ), // Row
+            ), // Padding Row
 
             Padding(
-              padding: EdgeInsets.only(top:_minimumPadding, bottom:_minimumPadding),
+              padding: EdgeInsets.only(bottom: _minimumPadding, top:_minimumPadding),
               child: Row(
-               children: <Widget> [
+                children: <Widget>[
 
-                Expanded(
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    style: textStyle,
-                    controller: termController,
-                    decoration: InputDecoration(
-                      labelText: "Time",
-                      labelStyle: textStyle,
-                      hintText: "Time in years",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0)
-                      )
-                    ),
-                    onChanged: (String userInput) {},
-                  ) // Textfield Rate of Interest
-                ), // Expanded 1
+                  Expanded(
+                    child: RaisedButton(
+                      color: Theme.of(context).accentColor,
+                      textColor: Theme.of(context).primaryColorDark,
+                      child: Text("Calculate", textScaleFactor: 1.5),
+                      onPressed: () {
+                        setState( () {
+                          if (_formKey.currentState.validate()) {
+                            this.displayResult = _calculateTotalReturns();
+                          }
+                        });
+                      }
+                    ) // RaisedButton Calculate
+                  ), //Expanded
 
-                Container(width: _minimumPadding* 5),
+                  Expanded(
+                    child: RaisedButton(
+                      color: Theme.of(context).primaryColorDark,
+                      textColor: Theme.of(context).primaryColorLight,
+                      child: Text("Reset", textScaleFactor: 1.5),
+                      onPressed: () {
 
-                Expanded(
-                  child: DropdownButton<String>(
-                    items: _currencies.map( (String dropDownStringItem) {
-                      return DropdownMenuItem<String>(
-                        value: dropDownStringItem,
-                        child: Text(dropDownStringItem),
+                        setState( () {
+                          _reset();
+                        });
+                      }
+                    ), // RaisedButton Reset
+                  ) //Expanded
+                ]
 
-                      ); // DropdownMenuItem
-                    }).toList(),
+              ) // Row 2 Submit and reset buttons
+            ), // Padding
 
-                    onChanged: (String newValueSelected){
-                      _dropDownItemSelected(newValueSelected);
-                    }, //onChanged
+            Padding(
+              padding: EdgeInsets.all(_minimumPadding * 2),
+              child: Text(this.displayResult, style: textStyle,)
+            )
 
-                    value: _currentItemSelected,
-                  ) // DropdownButton
-                ) // Expanded 2
-
-              ] // Row widget list
-            ), // Row
-          ), // Padding Row
-
-          Padding(
-            padding: EdgeInsets.only(bottom: _minimumPadding, top:_minimumPadding),
-            child: Row(
-              children: <Widget>[
-
-                Expanded(
-                  child: RaisedButton(
-                    color: Theme.of(context).accentColor,
-                    textColor: Theme.of(context).primaryColorDark,
-                    child: Text("Calculate", textScaleFactor: 1.5),
-                    onPressed: () {
-                      setState( () {
-                        this.displayResult = _calculateTotalReturns();
-                      });
-                    }
-                  ) // RaisedButton Calculate
-                ), //Expanded
-
-                Expanded(
-                  child: RaisedButton(
-                    color: Theme.of(context).primaryColorDark,
-                    textColor: Theme.of(context).primaryColorLight,
-                    child: Text("Reset", textScaleFactor: 1.5),
-                    onPressed: () {
-
-                      setState( () {
-                        _reset();
-                      });
-                    }
-                  ), // RaisedButton Reset
-                ) //Expanded
-              ]
-
-            ) // Row 2 Submit and reset buttons
-          ), // Padding
-
-          Padding(
-            padding: EdgeInsets.all(_minimumPadding * 2),
-            child: Text(this.displayResult, style: textStyle,)
-          )
-
-          ] // Column widget list
-        ) //Column
+            ] // Column widget list
+          ) //Column
+        ) // Padding
       ) // Container
     );// Scaffold
   }
@@ -156,19 +149,27 @@ class _SIFormState extends State<SIForm>{
   Widget genTextField({String labelText, String hintText, TextStyle textStyle, TextEditingController controller} ) {
     return Padding(
       padding: EdgeInsets.only(top:_minimumPadding, bottom:_minimumPadding),
-      child: TextField(
+      child: TextFormField(
         keyboardType: TextInputType.number,
         style: textStyle,
         controller: controller,
+        validator: (String value) {
+          if (value.isEmpty) {
+            return "Please enter $labelText";
+          }
+        },
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: textStyle,
           hintText: hintText,
+          errorStyle: TextStyle(
+            color: Colors.yellowAccent,
+            fontSize: 15.0
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5.0)
           )
         ),
-        onChanged: (String userInput) {},
       ), // Textfield
     );
   } // genTextField function
