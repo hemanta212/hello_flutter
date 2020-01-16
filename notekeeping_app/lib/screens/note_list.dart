@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:notekeeping_app/models/note.dart';
-import 'package:notekeeping_app/screens/note_detail.dart';
 import 'package:notekeeping_app/utils/db_helper.dart';
+import 'package:notekeeping_app/screens/note_detail.dart';
 import 'package:sqflite/sqflite.dart';
 
 
@@ -16,7 +16,7 @@ class NoteList extends StatefulWidget {
 class NoteListState extends State<NoteList> {
   DbHelper databaseHelper = DbHelper();
   List<Note> noteList;
-  var count = 0;
+  int count = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,6 @@ class NoteListState extends State<NoteList> {
       body: getNoteListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          debugPrint("Fab clicked");
           navigateToDetail(Note('', '', 2), 'Create Note');
         },
         tooltip: 'Add Note',
@@ -63,7 +62,6 @@ class NoteListState extends State<NoteList> {
                 },
               ),
               onTap: () {
-                debugPrint('Listview item tapped');
                 navigateToDetail(this.noteList[position], 'Edit Note');
               },
             ));
@@ -110,7 +108,6 @@ class NoteListState extends State<NoteList> {
     }));
 
     if (result == true){
-      debugPrint("refreshing Lis view");
       updateListView();
     }
   }

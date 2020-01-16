@@ -11,10 +11,14 @@ class Note {
   Note.withId(this._id, this._title, this._date, this._priority, [this._description]);
 
   int get id => _id;
+
   String get title => _title;
+
   String get description => _description;
-  String get date => _date;
+
   int get priority => _priority;
+
+  String get date => _date;
 
   set title(String newTitle) {
     if (newTitle.length <= 255) {
@@ -55,7 +59,7 @@ class Note {
 
   // Extract note obj from map obj
   Note.fromMapObject(Map<String, dynamic> map) {
-    this._id = map['_id'];
+    this._id = map['id'];
     this._description = map['description'];
     this._title = map['title'];
     this._priority = map['priority'];

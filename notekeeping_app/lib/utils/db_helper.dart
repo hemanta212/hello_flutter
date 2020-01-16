@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:notekeeping_app/models/note.dart';
+import 'package:flutter/material.dart';
 
 
 class DbHelper {
@@ -47,8 +48,8 @@ class DbHelper {
 
   void _createDb(Database db, int newVersion) async {
 
-    await db.execute('CREATE TABLE $noteTable($colId INTEGER PRIMARY KEY AUTOINCREMENT,'
-          '$colTitle TEXT, $colDescription TEXT, $colPriority INTEGER, $colDate TEXT)');
+    await db.execute('CREATE TABLE $noteTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colTitle TEXT, '
+        '$colDescription TEXT, $colPriority INTEGER, $colDate TEXT)');
   }
 
 
@@ -62,6 +63,8 @@ class DbHelper {
   // Insert Operation: insert a note to the database
   Future<int> insertNote(Note note) async {
     Database db = await this.database;
+    var noti = note.toMap();
+    debugPrint('insert note $noti');
     var result = await db.insert(noteTable, note.toMap());
     return result;
   }

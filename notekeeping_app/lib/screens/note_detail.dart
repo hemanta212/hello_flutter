@@ -4,8 +4,6 @@ import 'package:notekeeping_app/models/note.dart';
 import 'package:notekeeping_app/utils/db_helper.dart';
 import 'package:intl/intl.dart';
 
-import 'package:flutter/material.dart';
-
 class NoteDetail extends StatefulWidget {
   final String appBarTitle;
   final Note note;
@@ -18,12 +16,17 @@ class NoteDetail extends StatefulWidget {
   }
 }
 
+
+
 class NoteDetailState extends State<NoteDetail> {
+
+  static var _priorities = ['High', 'Low'];
+
   DbHelper databaseHelper = DbHelper();
 
   String appBarTitle;
   Note note;
-  static var _priorities = ['High', 'Low'];
+
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -38,7 +41,8 @@ class NoteDetailState extends State<NoteDetail> {
     descriptionController.text = note.description;
 
     return WillPopScope(
-        onWillPop: () {
+
+      onWillPop: () {
           // When user presses the back button write some code to control
           moveToLastScreen();
         },
@@ -57,8 +61,8 @@ class NoteDetailState extends State<NoteDetail> {
                   // First element
                   ListTile(
                       title: DropdownButton(
-                      items: _priorities.map((String dropDownStringItem) {
-                        return DropdownMenuItem<String>(
+                    items: _priorities.map((String dropDownStringItem) {
+                      return DropdownMenuItem<String>(
                           value: dropDownStringItem,
                           child: Text(dropDownStringItem));
                     }).toList(),
@@ -75,7 +79,7 @@ class NoteDetailState extends State<NoteDetail> {
                   // Second element
                   Padding(
                       padding:
-                          EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
+                          EdgeInsets.only(top: 15.0, bottom: 15.0),
                       child: TextField(
                         controller: titleController,
                         style: textStyle,
@@ -93,7 +97,7 @@ class NoteDetailState extends State<NoteDetail> {
                   // Third element
                   Padding(
                       padding:
-                          EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
+                          EdgeInsets.only(top: 15.0, bottom: 15.0),
                       child: TextField(
                         controller: descriptionController,
                         style: textStyle,
@@ -111,7 +115,7 @@ class NoteDetailState extends State<NoteDetail> {
                   // Fourth element
                   Padding(
                       padding:
-                          EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
+                          EdgeInsets.only(top: 15.0, bottom: 15.0),
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -160,18 +164,17 @@ class NoteDetailState extends State<NoteDetail> {
 
   // Convert the string priority in form of int to save in db
   void updatePriorityAsInt(String value) {
-    if (value == 'High'){
+    if (value == 'High') {
       note.priority = 1;
-    }
-    else {
-      note.priority = 0;
+    } else {
+      note.priority = 2;
     }
   }
 
   // Convert the int priority from db to string to display in ui
   String getPriorityAsString(int priority) {
     String result;
-    if (priority == 1){
+    if (priority == 1) {
       result = _priorities[0]; // High
     } else {
       result = _priorities[1]; // Low
@@ -189,77 +192,60 @@ class NoteDetailState extends State<NoteDetail> {
     note.description = descriptionController.text;
   }
 
-
   // Save data to database
   void _save() async {
-
     moveToLastScreen();
 
     note.date = DateFormat.yMMMd().format(DateTime.now());
     int result;
-    if (note.id != null) { // Case 1: Update operation
+    if (note.id != null) {
+      // Case 1: Update operation
       debugPrint("Updated note");
       result = await databaseHelper.updateNote(note);
-    }else { // Case 2: Insert operation
+    } else {
+      // Case 2: Insert operation
       result = await databaseHelper.insertNote(note);
     }
 
-    if (result != 0) { // Success
-        _showAlertDialog('Status', 'Note saved successfully');
-      } else { // Failure
-        _showAlertDialog('Status', 'Problem saving note, try again!');
-      }
+    if (result != 0) {
+      // Success
+      _showAlertDialog('Status', 'Note saved successfully');
+    } else {
+      // Failure
+      _showAlertDialog('Status', 'Problem saving note, try again!');
+    }
   }
 
   // Delete note data
   void _delete() async {
-
     moveToLastScreen();
-
-    int result;
-    debugPrint('$note.id');
-    if (note.id == null) { // Case 1: Abandon new note creation
+    if (note.id == null) {
+      // Case 1: Abandon new note creation
       _showAlertDialog('Status', 'Note not created');
       return;
-    }else { // Case 2: Delete note from database
-      result = await databaseHelper.deleteNote(note.id);
     }
 
-    if (result != 0) { // Success
-        _showAlertDialog('Status', 'Note deleted successfully');
-      } else { // Failure
-        _showAlertDialog('Status', 'Problem deleting note, try again!');
-      }
-  }
+    // Case 2: Delete note from database
+    int result = await databaseHelper.deleteNote(note.id);
 
+
+    if (result != 0) {
+      // Success
+      _showAlertDialog('Status', 'Note deleted successfully');
+    } else {
+      // Failure
+      _showAlertDialog('Status', 'Problem deleting note, try again!');
+    }
+  }
 
   void _showAlertDialog(String title, String message) {
     AlertDialog alertDialog = AlertDialog(
       title: Text(title),
       content: Text(message),
-      );
+    );
     showDialog(
       context: context,
       builder: (_) => alertDialog,
     );
   }
-
-} // Note detail state
-
-/*
-  Widget getNoteDetailView() {
-    return Form(
-        key: _formKey,
-        child: Padding(
-          padding: EdgeInsets.all(_minimumPadding * 2),
-          child: ListView(
-            children: <Widget>[
-              Text("WORK IN PROGRESS"),
-            ],
-          ),
-        ));
-  }
-
-  //Widget genTextFormField(BuildContext context)
 }
-*/
