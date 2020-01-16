@@ -24,7 +24,7 @@ class AppStateKeeper extends State<App> {
           'You have Pressed the plus button $score times',
            textAlign: TextAlign.center,
            style: TextStyle(fontWeight: FontWeight.bold),
-           textScaleFactor: scaleFactor;
+           textScaleFactor: scaleFactor,
         ),
 
         floatingActionButton: FloatingActionButton(
