@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:notekeeping_app/models/note.dart';
 import 'package:notekeeping_app/utils/db_helper.dart';
@@ -16,17 +15,13 @@ class NoteDetail extends StatefulWidget {
   }
 }
 
-
-
 class NoteDetailState extends State<NoteDetail> {
-
   static var _priorities = ['High', 'Low'];
 
   DbHelper databaseHelper = DbHelper();
 
   String appBarTitle;
   Note note;
-
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -41,8 +36,7 @@ class NoteDetailState extends State<NoteDetail> {
     descriptionController.text = note.description;
 
     return WillPopScope(
-
-      onWillPop: () {
+        onWillPop: () {
           // When user presses the back button write some code to control
           moveToLastScreen();
         },
@@ -78,8 +72,7 @@ class NoteDetailState extends State<NoteDetail> {
 
                   // Second element
                   Padding(
-                      padding:
-                          EdgeInsets.only(top: 15.0, bottom: 15.0),
+                      padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                       child: TextField(
                         controller: titleController,
                         style: textStyle,
@@ -96,8 +89,7 @@ class NoteDetailState extends State<NoteDetail> {
 
                   // Third element
                   Padding(
-                      padding:
-                          EdgeInsets.only(top: 15.0, bottom: 15.0),
+                      padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                       child: TextField(
                         controller: descriptionController,
                         style: textStyle,
@@ -114,8 +106,7 @@ class NoteDetailState extends State<NoteDetail> {
 
                   // Fourth element
                   Padding(
-                      padding:
-                          EdgeInsets.only(top: 15.0, bottom: 15.0),
+                      padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -227,7 +218,6 @@ class NoteDetailState extends State<NoteDetail> {
 
     // Case 2: Delete note from database
     int result = await databaseHelper.deleteNote(note.id);
-
 
     if (result != 0) {
       // Success
