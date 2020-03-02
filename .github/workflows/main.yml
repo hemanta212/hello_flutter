@@ -24,17 +24,21 @@ jobs:
           cd app/simple_interest_calculator
           flutter pub get
           flutter build apk
+          mkdir rel
+          mv build/app/outputs/apk/release/app-release.apk rel/SI_Calculator-release.apk
           cd ../notekeeping_app/
           flutter pub get
           flutter build apk
+          mkdir rel
+          mv build/app/outputs/apk/release/app-release.apk rel/Noteekeeping-release.apk
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            app/simple_interest_calculator/build/app/outputs/apk/app_release/app-release.apk
-            app/notekeeping_app/build/app/outputs/apk/app_release/app-release.apk
+            app/simple_interest_calculator/rel/SI_Calculator-release.apk
+            app/notekeeping_app/rel/Noteekeeping-release.apk
           draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
