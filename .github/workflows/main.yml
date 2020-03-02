@@ -49,7 +49,7 @@ jobs:
           files: |
             app/simple_interest_calculator/rel/SI_Calculator-release.apk
             app/notekeeping_app/rel/Noteekeeping-release.apk
-            app/notekeeping_app/rel/Hello_world-release.apk
-            app/notekeeping_app/rel/Lucky_no_generator-release.apk
+            app/hello_world/rel/Hello_world-release.apk
+            app/lucky_no_generator/rel/Lucky_no_generator-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

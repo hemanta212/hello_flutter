@@ -20,7 +20,7 @@ $ flutter run
 
 ### 2. Install and try out apks!
 Head over to the release page to try out the apps.
-[APK Releases](https://github.com/hemanta212/hello_flutter/releases/tag/0.0.1)
+[APK Releases](https://github.com/hemanta212/hello_flutter/releases/tag/v0.0.1)
 
 ## Projects: (ORDER: Beginner ---> Advanced)
 1. [Hello world](#hello) [Beginner]
