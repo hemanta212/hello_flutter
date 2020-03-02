@@ -1,4 +1,4 @@
-name: Repository Dispatch
+name: Bookkeeping_app
 on:
   repository_dispatch:
     types: [bookkeeping_app-release]
@@ -41,7 +41,6 @@ jobs:
             app/build/app/outputs/apk/release/app-x86_64-release.apk
             app/build/app/outputs/apk/app_release/app-release.apk
           body_path: app/CHANGELOG.txt
-          tag_name: "Bookkeeping App ${{ github.event.client_payload.version }}"
-          draft: true
+          tag_name: ${{ github.event.client_payload.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

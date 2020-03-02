@@ -1,7 +1,7 @@
 on:
   push:
 
-name: Run Build
+name: Build
 jobs:
   linux:
     name: Android
@@ -21,7 +21,17 @@ jobs:
           path: 'app'
 
       - run: |
-          cd app/simple_interest_calculator
+          cd app/lucky_no_generator
+          flutter pub get
+          flutter build apk
+          mkdir rel
+          mv build/app/outputs/apk/release/app-release.apk rel/Lucky_no_generator-release.apk
+          cd ../hello_world
+          flutter pub get
+          flutter build apk
+          mkdir rel
+          mv build/app/outputs/apk/release/app-release.apk rel/Hello_world-release.apk
+          cd ../simple_interest_calculator
           flutter pub get
           flutter build apk
           mkdir rel
@@ -39,6 +49,7 @@ jobs:
           files: |
             app/simple_interest_calculator/rel/SI_Calculator-release.apk
             app/notekeeping_app/rel/Noteekeeping-release.apk
-          draft: true
+            app/notekeeping_app/rel/Hello_world-release.apk
+            app/notekeeping_app/rel/Lucky_no_generator-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
