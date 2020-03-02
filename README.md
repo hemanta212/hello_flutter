@@ -3,7 +3,7 @@ website: https://flutter.dev
 docs: https://flutter.dev/docs
 
 ![build](https://github.com/hemanta212/hello_flutter/workflows/Build/badge.svg)
-![Bookkeeping App](https://github.com/hemanta212/hello_flutter/workflows/Bookkeeping/badge.svg)
+![Bookkeeping App](https://github.com/hemanta212/hello_flutter/workflows/Bookkeeping_app/badge.svg)
 
 ## Project Installation:
 ### 1. Building yourself
