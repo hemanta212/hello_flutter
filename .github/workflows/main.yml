@@ -51,5 +51,6 @@ jobs:
             app/lucky_no_generator/rel/lucky_no_generator-release.apk
             app/si_calculator/rel/si_calculator-release.apk
             app/notekeeping_app/rel/notekeeping-release.apk
+          body_path: app/CHANGELOG.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

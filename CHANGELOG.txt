@@ -1,0 +1,8 @@
+Version 0.0.2
+
+# Hello Flutter apps
+
+Fixes:
+* Made text input entry bigger in notekeeping app.
+* Fix notekeeping app crash while saving.
+* Fix androidx_template showing in package name.
