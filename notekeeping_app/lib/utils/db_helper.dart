@@ -14,7 +14,7 @@ class DbHelper {
   String noteTable = 'note_table';
   String colId = 'id';
   String colTitle = 'title';
-  String colDescription = 'descripton';
+  String colDescription = 'description';
   String colPriority = 'priority';
   String colDate = 'date';
 
