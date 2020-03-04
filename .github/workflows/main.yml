@@ -1,56 +1,81 @@
+name: Build
 on:
   push:
 
-name: Build
+
 jobs:
-  linux:
-    name: Android
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
+  setup:
+   runs-on: ubuntu-latest
+   strategy:
+     matrix:
+       project: ['lucky_no_generator', 'hello_world', 'si_calculator', 'notekeeping_app']
+
+   steps:
+     - run: |
           git clone https://github.com/flutter/flutter.git
           cd flutter
-      - run: echo ::add-path::`pwd`"/flutter/bin"
+     - run: echo ::add-path::`pwd`"/flutter/bin"
+     - uses: actions/setup-java@v1
+       with:
+         java-version: '12.x'
 
-      - uses: actions/setup-java@v1
-        with:
-          java-version: '12.x'
+     - uses: actions/checkout@v2
+       with:
+         path: 'app'
 
-      - uses: actions/checkout@v2
-        with:
-          path: 'app'
-
-      - run: |
-          cd app/lucky_no_generator
+     - run: |
+          cd app/${{ matrix.project}}
           flutter pub get
           flutter build apk
           mkdir rel
-          mv build/app/outputs/apk/release/app-release.apk rel/lucky_no_generator-release.apk
-          cd ../hello_world
-          flutter pub get
-          flutter build apk
-          mkdir rel
-          mv build/app/outputs/apk/release/app-release.apk rel/hello_world-release.apk
-          cd ../si_calculator
-          flutter pub get
-          flutter build apk
-          mkdir rel
-          mv build/app/outputs/apk/release/app-release.apk rel/si_calculator-release.apk
-          cd ../notekeeping_app/
-          flutter pub get
-          flutter build apk
-          mkdir rel
-          mv build/app/outputs/apk/release/app-release.apk rel/notekeeping-release.apk
+          mv build/app/outputs/apk/release/app-release.apk rel/${{ matrix.project }}-release.apk
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            app/hello_world/rel/hello_world-release.apk
-            app/lucky_no_generator/rel/lucky_no_generator-release.apk
-            app/si_calculator/rel/si_calculator-release.apk
-            app/notekeeping_app/rel/notekeeping-release.apk
-          body_path: app/CHANGELOG.txt
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     - uses: actions/upload-artifact@v1
+       with:
+         name: ${{ matrix.project }}-release.apk
+         path: app/${{ matrix.project }}/rel/${{ matrix.project }}-release.apk
+
+  release:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v2
+       with:
+         path: 'app'
+
+     - run: |
+         cd app
+         mkdir rel/
+
+     - uses: actions/download-artifact@v1
+       with:
+         name: lucky_no_generator-release.apk
+         path: rel/
+
+     - uses: actions/download-artifact@v1
+       with:
+         name: hello_world-release.apk
+         path: rel/
+
+     - uses: actions/download-artifact@v1
+       with:
+         name: notekeeping_app-release.apk
+         path: rel/
+
+     - uses: actions/download-artifact@v1
+       with:
+         name: si_calculator-release.apk
+         path: rel/
+
+     - name: Release
+       uses: softprops/action-gh-release@v1
+       if: startsWith(github.ref, 'refs/tags/')
+       with:
+         files: |
+             rel/si_calculator-release.apk
+             rel/notekeeping_app-release.apk
+             rel/hello_world-release.apk
+             rel/lucky_no_generator-release.apk
+         body_path: app/CHANGELOG.txt
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
