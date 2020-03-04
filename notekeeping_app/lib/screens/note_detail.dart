@@ -38,7 +38,7 @@ class NoteDetailState extends State<NoteDetail> {
     return WillPopScope(
         onWillPop: () {
           // When user presses the back button write some code to control
-          moveToLastScreen();
+          return moveToLastScreen();
         },
         child: Scaffold(
           appBar: AppBar(
@@ -151,7 +151,7 @@ class NoteDetailState extends State<NoteDetail> {
         ));
   } // Build method
 
-  void moveToLastScreen() {
+  moveToLastScreen() {
     Navigator.pop(context, true);
   }
 
