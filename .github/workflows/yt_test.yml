@@ -1,0 +1,38 @@
+name: Yt_test
+on:
+  push:
+    
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout bookkeeping app
+        uses: actions/checkout@v2
+        with:
+          repository: hemanta212/youtube-upload
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          ref: 'refs/tags/v0.0.1' # ${{ github.event.client_payload.ref }}
+          path: 'app'
+
+      - run: |
+          cp app/client_screts.json app/.youtube-upload-credentials.json ~/
+
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+
+      - uses: dschep/install-poetry-action@v1.2
+        with:
+          version: 1.0.5
+
+      - run: |
+          wget https://github.com/tokland/youtube-upload/archive/master.zip
+          unzip master.zip
+          cd youtube-upload-master
+          cp ../app/pyproject.toml . 
+          poetry install
+          poetry run python setup.py install
+          poetry add youtube-dl
+          poetry run youtube-dl -f 22 https://www.youtube.com/watch?v=YOl4FFFJToc -o audio.mp4
+          poetry run youtube-upload --title='TEST upload' --description='A setup test of youtube command line uploader' --privacy=unlisted audio.mp4
