@@ -15,7 +15,7 @@ jobs:
           path: 'app'
 
       - run: |
-          cp app/client_screts.json app/.youtube-upload-credentials.json ~/
+          cp app/client_secrets.json app/.youtube-upload-credentials.json ~/
 
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
